@@ -41,7 +41,7 @@ export default async function FavoritesPage() {
               key={m.show.id} 
               movie={m} 
               isFavorite={true}
-              priority={index < 8} 
+              priority={index < 10} 
             />
           ))}
         </div>

@@ -11,3 +11,19 @@ export async function getMovieDetail(id: string) {
   if (!res.ok) throw new Error('Error al traer detalle');
   return res.json();
 }
+
+export const getDefaultMovies = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/shows`);
+    if (!res.ok) throw new Error("Error fetching default movies");
+    
+    const data = await res.json();
+  
+    return data.slice(0, 100).map((show: any) => ({
+      show: show
+    }));
+  } catch (error) {
+    console.error("Error en getDefaultMovies:", error);
+    return [];
+  }
+};

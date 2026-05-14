@@ -1,25 +1,38 @@
 import CardMovie from "@/components/CardMovie";
 import { SearchForm } from "@/components/SearchForm";
-import { getMovies } from "@/lib/services/movies";
+import { Pagination } from "@/components/Pagination";
+import { getMovies, getDefaultMovies } from "@/lib/services/movies";
 import { prisma } from "@/lib/services/prisma";
 import { getServerSession } from "next-auth";
+
+const ITEMS_PER_PAGE = 10;
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>; 
+  searchParams: Promise<{ q?: string; page?:string }>; 
 }) {
-  const { q } = await searchParams;
+  const { q, page } = await searchParams;
   const query = q || "";
-  
+  const currentPage = Number(page) || 1;
   let movies = [];
   let favoriteMovieIds: number[] = [];
 
   if (query.length >= 2) {
     movies = await getMovies(query);
+  } else {
+    movies = await getDefaultMovies();
   }
 
+  const totalMovies = movies.length;
+  const totalPages = Math.ceil(totalMovies / ITEMS_PER_PAGE);
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedMovies = movies.slice(startIndex, endIndex);
+
   const session = await getServerSession();
+
   if (session?.user?.email) {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
@@ -40,20 +53,29 @@ export default async function SearchPage({
         <SearchForm />
       </div>
 
-      {movies.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
-          {movies.map((m: any, index: number) => {
-            const isFav = favoriteMovieIds.includes(m.show.id);
-            return (
-              <CardMovie 
-                key={m.show.id} 
-                movie={m}
-                isFavorite={isFav} // Ahora le pasamos true o false de verdad
-                priority={index < 8} 
+      {paginatedMovies.length > 0 ? (
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
+            {paginatedMovies.map((m: any, index: number) => {
+              const isFav = favoriteMovieIds.includes(m.show.id);
+              return (
+                <CardMovie 
+                  key={m.show.id} 
+                  movie={m}
+                  isFavorite={isFav} 
+                  priority={index < 10} 
+                />
+              );
+            })}
+          </div>
+          <div className="mt-12 mb-8">
+              <Pagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                query={query} 
               />
-            );
-          })}
-        </div>
+          </div>
+        </>
       ) : (
         query && (
           <div className="text-center text-slate-400 mt-20">
