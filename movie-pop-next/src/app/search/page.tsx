@@ -1,6 +1,8 @@
 import CardMovie from "@/components/CardMovie";
 import { SearchForm } from "@/components/SearchForm";
 import { getMovies } from "@/lib/services/movies";
+import { prisma } from "@/lib/services/prisma";
+import { getServerSession } from "next-auth";
 
 export default async function SearchPage({
   searchParams,
@@ -11,9 +13,21 @@ export default async function SearchPage({
   const query = q || "";
   
   let movies = [];
+  let favoriteMovieIds: number[] = [];
 
   if (query.length >= 2) {
     movies = await getMovies(query);
+  }
+
+  const session = await getServerSession();
+  if (session?.user?.email) {
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+      include: { favorites: { select: { movieId: true } } }, 
+    });
+    if (user?.favorites) {
+      favoriteMovieIds = user.favorites.map((fav) => fav.movieId);
+    }
   }
 
   return (
@@ -28,13 +42,17 @@ export default async function SearchPage({
 
       {movies.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center">
-          {movies.map((m: any, index: number) => (
-            <CardMovie 
-              key={m.show.id} 
-              movie={m} 
-              priority={index < 8} // Las primeras 8 cargan instantáneo
-            />
-          ))}
+          {movies.map((m: any, index: number) => {
+            const isFav = favoriteMovieIds.includes(m.show.id);
+            return (
+              <CardMovie 
+                key={m.show.id} 
+                movie={m}
+                isFavorite={isFav} // Ahora le pasamos true o false de verdad
+                priority={index < 8} 
+              />
+            );
+          })}
         </div>
       ) : (
         query && (

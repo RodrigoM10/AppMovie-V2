@@ -3,14 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { FaUserAlt, FaArrowLeft, FaHome, FaSearch } from 'react-icons/fa';
+import { FaHeart, FaUserAlt, FaArrowLeft, FaHome, FaSearch } from 'react-icons/fa';
 import { BiLogOutCircle } from 'react-icons/bi';
 
 export const NavbarMain = () => {
   const pathname = usePathname();
-  // Extraemos la sesión y el estado de NextAuth
   const { data: session, status } = useSession(); 
-
   const isDetail = pathname.startsWith('/movie/');
 
   return (
@@ -20,11 +18,9 @@ export const NavbarMain = () => {
         {/* Sección Autenticación */}
         <div className="flex items-center gap-4">
           {status === "loading" ? (
-             // Un spinner chiquito mientras verifica si estás logueado
              <div className="w-8 h-8 rounded-full border-2 border-slate-500 border-t-amber-500 animate-spin"></div>
           ) : session?.user ? (
             <div className="flex items-center gap-3">
-              {/* Usamos etiqueta <img> clásica para evitar el error de "unconfigured host" con los dominios de Google */}
               <img 
                 src={session.user.image || ""} 
                 alt="Avatar de usuario" 
@@ -71,6 +67,11 @@ export const NavbarMain = () => {
               <Link href="/search" className={`transition-colors ${pathname === '/search' ? 'text-amber-500' : 'hover:text-amber-500/70'}`}>
                 <FaSearch />
               </Link>
+              {session?.user && (
+                <Link href="/favorites" className={`transition-colors ${pathname === '/favorites' ? 'text-red-500' : 'hover:text-red-500/70'}`}>
+                  <FaHeart />
+                </Link>
+              )}
             </>
           )}
         </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import defaultImage from '../public/assets/MovieDefaultImage.png'
+import { FavoriteButton } from './FavoriteButton';
 
 interface MovieProps {
   movie: {
@@ -10,16 +11,18 @@ interface MovieProps {
       image?: { medium: string };
     };
   };
-  priority?: boolean; // Nuevo prop opcional
+  isFavorite?: boolean;
+  priority?: boolean;
 }
 
-const CardMovie = ({ movie, priority = false }: MovieProps) => {
+const CardMovie = ({ movie, priority = false, isFavorite = false }: MovieProps) => {
   const { show } = movie;
   
   const movieImage = show.image?.medium || defaultImage;
 
   return (
     <div className="w-[11rem] md:w-[17rem] bg-transparent transition-transform duration-300 hover:scale-105">
+      <FavoriteButton isInitiallyFavorite={isFavorite} movie={show} />
       <Link href={`/movie/${show.id}`} className="no-underline group">
         <div className="relative overflow-hidden rounded-lg shadow-lg">
           <Image

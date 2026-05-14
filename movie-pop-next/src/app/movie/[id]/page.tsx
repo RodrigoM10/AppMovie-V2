@@ -1,5 +1,8 @@
 
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { getMovieDetail } from "@/lib/services/movies";
+import { prisma } from "@/lib/services/prisma";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 
 export default async function MovieDetailPage({ 
@@ -7,8 +10,32 @@ export default async function MovieDetailPage({
 }: { 
   params: Promise<{ id: string }> 
 }) {
-  const { id } = await params; // Await aquí
+  const { id } = await params; 
   const movie = await getMovieDetail(id);
+
+  const session = await getServerSession();
+  let isInitiallyFavorite = false;
+
+  if (session?.user?.email) {
+    const user = await prisma.user.findUnique({ where: { email: session.user.email } });
+    if (user) {
+      const fav = await prisma.favorite.findUnique({
+        where: {
+          userId_movieId: { userId: user.id, movieId: Number(id) },
+        },
+      });
+      isInitiallyFavorite = !!fav;
+    }
+  }
+    
+  const movieForButton = {
+    id: movie.id,
+    name: movie.name,
+    image: { medium: movie.image?.original || "" }
+  };
+
+
+
   return (
     <div className="relative min-h-screen text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -19,12 +46,12 @@ export default async function MovieDetailPage({
           className="object-cover opacity-20 blur-xl scale-110"
         />
       </div>
-
       <div className="relative z-10 container mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row gap-12 items-center md:items-start">
-          
-          {/* Columna Izquierda: Poster y Rating */}
           <div className="flex flex-col items-center gap-4 shrink-0">
+            <div className="absolute m-top-4 -right-4 z-20 scale-110">
+              <FavoriteButton movie={movieForButton} isInitiallyFavorite={isInitiallyFavorite} />
+            </div>
             <div className="shadow-2xl rounded-xl overflow-hidden border border-white/10">
               <Image
                 src={movie?.image?.original || "/assets/MovieDefaultImage.png"}
@@ -35,15 +62,12 @@ export default async function MovieDetailPage({
               />
             </div>
             
-            {/* Rating Simplificado (puedes usar una librería o estrellas manuales) */}
             <div className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-md border border-white/20">
               <span className="text-yellow-400 text-xl font-bold">
                 ⭐ {movie?.rating?.average ? (movie.rating.average / 2).toFixed(1) : "N/A"} / 5
               </span>
             </div>
           </div>
-
-          {/* Columna Derecha: Información */}
           <div className="flex-1 max-w-2xl">
             <h1 className="text-5xl md:text-6xl font-black mb-6 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
               {movie.name}
