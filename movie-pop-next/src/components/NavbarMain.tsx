@@ -1,14 +1,16 @@
-"use function"; // Asegurate de que diga "use client" arriba de todo
 "use client";
+"use function";
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FaHeart, FaUserAlt, FaArrowLeft, FaHome, FaSearch } from 'react-icons/fa';
 import { BiLogOutCircle } from 'react-icons/bi';
 
 export const NavbarMain = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session, status } = useSession(); 
+
   const isDetail = pathname.startsWith('/movie/');
 
   return (
@@ -56,9 +58,13 @@ export const NavbarMain = () => {
         {/* Sección Navegación */}
         <div className="flex gap-6 text-2xl">
           {isDetail ? (
-            <Link href="/search" className="hover:text-amber-500 transition-colors">
+            <button 
+              onClick={() => router.back()} 
+              className="hover:text-amber-500 transition-colors"
+              aria-label="Volver"
+            >
               <FaArrowLeft />
-            </Link>
+            </button>
           ) : (
             <>
               <Link href="/" className={`transition-colors ${pathname === '/' ? 'text-amber-500' : 'hover:text-amber-500/70'}`}>

@@ -28,8 +28,8 @@ const CardMovie = ({ movie, priority = false, isFavorite = false }: MovieProps) 
           <Image
             src={movieImage}
             alt={show.name}
-            width={300}
-            height={450}
+            width={250}
+            height={300}
             className="w-full h-[250px] md:h-[320px] object-cover"
           />
           

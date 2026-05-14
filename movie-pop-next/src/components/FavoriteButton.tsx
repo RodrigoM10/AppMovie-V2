@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface Props {
   movie: {
@@ -17,11 +18,13 @@ export const FavoriteButton = ({ movie, isInitiallyFavorite = false }: Props) =>
   const { data: session } = useSession();
   const [isFavorite, setIsFavorite] = useState(isInitiallyFavorite);
   const [loading, setLoading] = useState(false);
+  
+  const router = useRouter();
 
   if (!session) return null;
 
   const toggleFavorite = async (e: React.MouseEvent) => {
-    e.preventDefault(); // ¡Clave! Evita que el Link de la tarjeta cambie de página
+    e.preventDefault(); 
     
     if (loading) return;
     setLoading(true);
@@ -29,26 +32,29 @@ export const FavoriteButton = ({ movie, isInitiallyFavorite = false }: Props) =>
     setIsFavorite(!isFavorite);
 
     try {
-      const res = await fetch("/api/favorites", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          movieId: movie.id,
-          movieName: movie.name,
-          image: movie.image?.medium || "",
-        }),
-      });
-      
-      const data = await res.json();
-      
-      // Si el servidor dio error, revertimos el estado
-      if (data.error) setIsFavorite(isFavorite);
-    } catch (error) {
-      setIsFavorite(isFavorite);
-    } finally {
-      setLoading(false);
-    }
-  };
+        const res = await fetch("/api/favorites", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            movieId: movie.id,
+            movieName: movie.name,
+            image: movie.image?.medium || "",
+            }),
+        });
+        
+        const data = await res.json();
+        
+        if (data.error) {
+                setIsFavorite(isFavorite);
+            } else {
+                router.refresh(); 
+            }
+            } catch (error) {
+            setIsFavorite(isFavorite);
+            } finally {
+            setLoading(false);
+            }
+    };
 
   return (
     <button
