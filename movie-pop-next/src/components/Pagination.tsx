@@ -1,17 +1,25 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface Props {
   currentPage: number;
   totalPages: number;
-  query: string;
 }
 
-export const Pagination = ({ currentPage, totalPages, query }: Props) => {
+export const Pagination = ({ currentPage, totalPages }: Props) => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams(); 
+
   if (totalPages <= 1) return null;
 
+ // Función dinámica: Mantiene cualquier parámetro existente y solo actualiza "page"
   const createPageURL = (pageNumber: number | string) => {
-    return `/search?q=${query}&page=${pageNumber}`;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
   };
 
   return (

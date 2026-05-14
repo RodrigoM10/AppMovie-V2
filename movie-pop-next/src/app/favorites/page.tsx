@@ -47,8 +47,8 @@ export default async function FavoritesPage() {
         </div>
       ) : (
         <div className="text-center text-slate-400 mt-20">
-          <p className="text-xl">Todavía no tenés películas en tu lista.</p>
-          <p className="mt-2 text-sm">Buscá tus favoritas y tocale el corazón.</p>
+          <p className="text-xl">Todavía no tenés nada en tu lista.</p>
+          <p className="mt-2 text-sm">Buscá tus series o shows favoritos y tocales el corazón.</p>
         </div>
       )}
     </div>

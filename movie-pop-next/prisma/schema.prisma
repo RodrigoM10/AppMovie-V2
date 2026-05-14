@@ -57,6 +57,6 @@ model Favorite {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  // Esto evita que un usuario guarde dos veces la misma película
+  // Esto evita que un usuario guarde dos veces el mismo contenido
   @@unique([userId, movieId]) 
 }

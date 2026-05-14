@@ -21,7 +21,7 @@ export const SearchForm = () => {
     <div className="w-full max-w-md mx-auto p-4">
       <input
         type="search"
-        placeholder="Buscar película..."
+        placeholder="Buscar serie o show..."
         defaultValue={searchParams.get('q')?.toString()}
         onChange={(e) => handleSearch(e.target.value)}
         className="w-full p-3 bg-[#294056] text-white rounded-lg border-none focus:ring-2 focus:ring-[#dbf6ff] outline-none transition-all"

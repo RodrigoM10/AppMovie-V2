@@ -46,7 +46,7 @@ export default async function SearchPage({
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-white text-3xl font-bold mb-8 text-center md:text-left">
-        {query ? `Resultados para: ${query}` : "Explorar Películas"}
+        {query ? `Resultados para: ${query}` : "Explorar Series y Shows"}
       </h1>
 
       <div className="mb-10">
@@ -72,7 +72,6 @@ export default async function SearchPage({
               <Pagination 
                 currentPage={currentPage} 
                 totalPages={totalPages} 
-                query={query} 
               />
           </div>
         </>
