@@ -77,7 +77,7 @@ export default async function CategoryPage({
                 key={m.show.id} 
                 movie={m}
                 isFavorite={favoriteMovieIds.includes(m.show.id)}
-                priority={index < 8} 
+                priority={index < 10} 
                 />
                 ))}
             </div>

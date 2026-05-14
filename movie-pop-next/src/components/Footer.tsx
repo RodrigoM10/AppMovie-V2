@@ -25,10 +25,10 @@ export const Footer = () => {
         </div>
 
         <div className="flex gap-4 text-2xl">
-          <Link href="#" className="hover:text-white transition-colors">
+          <Link href="https://github.com/RodrigoM10/AppMovie-V2" className="hover:text-white transition-colors">
             <FaGithub />
           </Link>
-          <Link href="#" className="hover:text-amber-500 transition-colors">
+          <Link href="https://www.linkedin.com/in/rodrigo-mendoza10/" className="hover:text-amber-500 transition-colors">
             <FaLinkedin />
           </Link>
         </div>
