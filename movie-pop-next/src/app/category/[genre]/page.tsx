@@ -32,7 +32,6 @@ export default async function CategoryPage({
   
   const allCategoryMovies = await getMoviesByCategory(genre);
 
-  // --- LÓGICA DE PAGINACIÓN ---
   const totalMovies = allCategoryMovies.length;
   const totalPages = Math.ceil(totalMovies / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

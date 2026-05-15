@@ -6,7 +6,6 @@ export const SearchForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Usamos un debounce para no saturar la API en cada teclazo
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {

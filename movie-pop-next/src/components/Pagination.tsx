@@ -15,7 +15,6 @@ export const Pagination = ({ currentPage, totalPages }: Props) => {
 
   if (totalPages <= 1) return null;
 
- // Función dinámica: Mantiene cualquier parámetro existente y solo actualiza "page"
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", pageNumber.toString());
