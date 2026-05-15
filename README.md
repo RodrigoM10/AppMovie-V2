@@ -40,3 +40,38 @@ Si querés clonar este proyecto y correrlo en tu máquina local, seguí estos pa
 ```bash
 git clone [https://github.com/TU_USUARIO/AppMovie-V2.git](https://github.com/TU_USUARIO/AppMovie-V2.git)
 cd movie-pop-next
+```
+### 2. Instalar las dependencias
+```bash
+npm install
+```
+### 3. Configurar las Variables de Entorno
+```.env
+# URL de conexión a tu cluster de MongoDB Atlas
+DATABASE_URL="mongodb+srv://<usuario>:<password>@cluster.mongodb.net/midatabase"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="un_secreto_generado_aleatoriamente"
+
+# Credenciales de Google Cloud Console (OAuth 2.0)
+GOOGLE_CLIENT_ID="tu_google_client_id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="tu_google_client_secret"
+```
+### 4. Ejecutar el servidor de desarrollo
+```bash
+npm run dev
+```
+Abrí http://localhost:3000 en tu navegador para ver la aplicación.
+
+📁 Estructura del Proyecto
+/src/app: Rutas principales de la aplicación (Home, Búsqueda, Categorías).
+
+/src/components: Componentes reutilizables de la interfaz de usuario (Tarjetas, Skeletons, Navbar).
+
+/src/api: Endpoints de backend y configuración de autenticación.
+
+👨‍💻 Autor
+Rodrigo Mendoza
+
+Desarrollador Full Stack | Ingeniero de Procesos
